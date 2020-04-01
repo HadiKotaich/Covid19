@@ -66,11 +66,3 @@ class InfoExtractor:
 
         return ret
 
-
-tester = SymptomsData()
-info = InfoExtractor(tester.synonyms)
-
-toPrint = info.ExtractInfo("I'm coughing, 24, travelled in مصاب region, cold")
-
-for aa,bb in toPrint:
-    print(aa,":",bb)
