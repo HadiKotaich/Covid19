@@ -1,5 +1,5 @@
-#Note: To use with Python 3.x or later for strings to be considered unicode by default
-
+﻿#Note: To use with Python 3.x or later for strings to be considered unicode by default
+from SymptomsData import SymptomsData
 import unicodedata
 
 #trial function
@@ -25,31 +25,18 @@ def clean(string):
 
 
 class InfoExtractor:
-    def __init__(self):
-    #hash table to fill with symptom:attribute
-    #each line is for an attribute
+    def __init__(self, synonyms):
+    #synonyms is a dictionary as synonym:attribute from SymptomsData
     #TODO need to decide on attribute names to use
-    #TODO single or double words for keys?
-        self.database = {'cough':'cough',
-                'cold':'cold', 'برد':'cold',
-                'diarrhea':'diarrhea', 'إسهال':'diarrhea',
-                'sore':'sore_throat', 'حلق':'sore_throat',
-                'body':'body_pain', 'muscle':'body_pain',
-                'headache':'headache',
-                'feaver':'temperature',
-                'breathing':'breathing', 'trouble':'breathing',
-                'fatigue':'fatigue', 'exhausted':'fatigue', 'إرهاق':'fatigue',
-                '14 days':'travel_14',
-                'affected region':'travel_corona',
-                'direct contact':'direct_contact', 'مصاب':'direct_contact'
-                }
+    #TODO single and multiple words
+        self.synonyms = synonyms
 
 
 
     #Given the message as a string, return a list of the information
     #return: list of tuples (attribute, 1 or 0 or value for age)
     def ExtractInfo(self,message):
-        database = self.database
+        synonyms = self.synonyms
         words = message.split()
         ret = []
         
@@ -74,9 +61,16 @@ class InfoExtractor:
             else:
                 #TODO should implement negation also
                 #TODO word distance and if multiple keywords?
-                if w in database:
-                    ret.append( (database[w], 1) )
+                if w in synonyms:
+                    ret.append( (synonyms[w], 1) )
 
         return ret
 
 
+tester = SymptomsData()
+info = InfoExtractor(tester.synonyms)
+
+toPrint = info.ExtractInfo("I'm coughing, 24, travelled in مصاب region, cold")
+
+for aa,bb in toPrint:
+    print(aa,":",bb)
