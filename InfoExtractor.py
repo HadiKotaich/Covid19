@@ -47,7 +47,7 @@ class InfoExtractor:
 
 
     #Given the message as a string, return a list of the information
-    #return: list of tuples (attribute, 'true' or 'false' or value for age)
+    #return: list of tuples (attribute, 1 or 0 or value for age)
     def ExtractInfo(self,message):
         database = self.database
         words = message.split()
@@ -68,14 +68,14 @@ class InfoExtractor:
                     
                 #could be temperature
                 else:
-                    temp_test = 'true' if float(w)>=37.8 else 'false'
+                    temp_test = 1 if float(w)>=37.8 else 0
                     ret.append( ('temperature', temp_test) )
 
             else:
                 #TODO should implement negation also
                 #TODO word distance and if multiple keywords?
                 if w in database:
-                    ret.append( (database[w], 'true') )
+                    ret.append( (database[w], 1) )
 
         return ret
 
