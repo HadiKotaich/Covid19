@@ -25,18 +25,18 @@ def clean(string):
 
 
 class InfoExtractor:
-    def __init__(self, synonyms):
-    #synonyms is a dictionary as synonym:attribute from SymptomsData
+    def __init__(self, baseSymptom):
+    #baseSymptom is a dictionary as synonym:Symptom from SymptomsData
     #TODO need to decide on attribute names to use
     #TODO single and multiple words
-        self.synonyms = synonyms
+        self.baseSymptom = baseSymptom
 
 
 
     #Given the message as a string, return a list of the information
     #return: list of tuples (attribute, 1 or 0 or value for age)
     def ExtractInfo(self,message):
-        synonyms = self.synonyms
+        baseSymptom = self.baseSymptom
         words = message.split()
         ret = []
         
@@ -61,8 +61,8 @@ class InfoExtractor:
             else:
                 #TODO should implement negation also
                 #TODO word distance and if multiple keywords?
-                if w in synonyms:
-                    ret.append( (synonyms[w], 1) )
+                if w in baseSymptom:
+                    ret.append( (baseSymptom[w], 1) )
 
         return ret
 

@@ -1,100 +1,88 @@
 class SymptomsData:
     def __init__(self):
+
+        tmp1, tmp2 = self.generateSynonyms()
         #for now we have 12 symptoms, as in the SymptomTrackingQuestions
-        self.symptoms = ['cough','cold','diarrhea','sore_throat','body_pain','headache',
-                         'temperature','breathing','fatigue','travel_14','travel_corona','direct_contact']
+        self.symptoms = tmp1
 
         #dictionary of synonym:symptom
-        self.synonyms = self.generateSynonyms()
+        self.baseSymptom = tmp2
 
 
     def generateSynonyms(self):
-        ret = {}
+        synonyms = {}
+        symptoms = []
+        baseSymptom = {}
 
         #divide the symptoms into separate lists of synonyms
-        #assume the number of lists is the number of symptoms
-        num = len(self.symptoms)
-        masterList = []
 
         #add here the synonyms in each list
         #separated in each list Arabic from English
-        coughList = ['سعال','أسعل',
-                     
-                     'cough'
-                     ]
+        synonyms['cough'] = ['سعال','أسعل',
 
-        coldList = ['برد','نزلات البرد',
-                    
-                    'cold',
-                    ]
-
-        diarrheaList = ['إسهال',
-
-                        'diarrhea'
-                        ]
-
-        sore_throatList = ['حلق','إلتهاب في الحلق'
-                           
-                           'sore throat'
-                           ]
-
-        body_painList = ['جسم','عضل','ألم',
-
-                         'body','muscle'
-                         ]
-
-        headacheList = ['صداع',
-                        
-                        'headache'
-                        ]
-
-        temperatureList = ['حرارة',
-
-                           'feaver'
-                           ]
-
-        breathingList = ['تنفس', 'صعوبة في التنفس',
-
-                         'trouble breathing']
-
-        fatigueList = ['إرهاق',
-
-                       'exhausted','fatigue'
-                       ]
-
-        travel_14List = ['١٤ يوم', 'سافرت'
-
-                         '14 days'
-                         ]
-
-        travel_coronaList = ['مناطق مصابة',
-
-                             'affected region'
+                             'cough'
                              ]
 
-        direct_contactList = ['مصاب','إتصال بالمصابين',
+        synonyms['cold'] = ['برد','نزلات البرد',
 
-                              'direct contact'
-                              ]
+                            'cold',
+                            ]
 
-        masterList.append(coughList)
-        masterList.append(coldList)
-        masterList.append(diarrheaList)
-        masterList.append(sore_throatList)
-        masterList.append(body_painList)
-        masterList.append(headacheList)
-        masterList.append(temperatureList)
-        masterList.append(breathingList)
-        masterList.append(fatigueList)
-        masterList.append(travel_14List)
-        masterList.append(travel_coronaList)
-        masterList.append(direct_contactList)
+        synonyms['diarrhea'] = ['إسهال',
+
+                                'diarrhea'
+                                ]
+
+        synonyms['sore_throat'] = ['حلق','إلتهاب في الحلق'
+
+                                   'sore throat'
+                                   ]
+
+        synonyms['body_pain'] = ['جسم','عضل','ألم',
+
+                                 'body','muscle'
+                                 ]
+
+        synonyms['headache'] = ['صداع',
+
+                                'headache'
+                                ]
+
+        synonyms['temperature'] = ['حرارة',
+
+                                   'feaver'
+                                   ]
+
+        synonyms['breathing'] = ['تنفس', 'صعوبة في التنفس',
+
+                                 'trouble breathing'
+                                 ]
+
+        synonyms['fatigue'] = ['إرهاق',
+
+                               'exhausted','fatigue'
+                               ]
+
+        synonyms['travel_14'] = ['١٤ يوم', 'سافرت'
+
+                                 '14 days'
+                                 ]
+
+        synonyms['travel_corona'] = ['مناطق مصابة',
+
+                                     'affected region'
+                                     ]
+
+        synonyms['direct_contact'] = ['مصاب','إتصال بالمصابين',
+
+                                      'direct contact'
+                                      ]
         
-        for i in range(num):
-            curList = masterList[i]
-            symptom = self.symptoms[i]
-            for elem in curList:
-                ret[elem] = symptom
+        for symptom in synonyms.keys():
+            symptoms.append(symptom)
+            
+            for synonym in synonyms[symptom]:
+                baseSymptom[synonym] = symptom
 
-        return ret
+        return symptoms,baseSymptom
 
