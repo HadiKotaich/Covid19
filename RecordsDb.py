@@ -65,7 +65,7 @@ class RecordsDb:
     query += """ || ' ] } ' where id = ? and date = ?"""    
     params.append(id)
     params.append(date)
-    print(params)
+    # print(params)
     self.con.execute(query, params)
     self.con.commit()
 
