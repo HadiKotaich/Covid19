@@ -8,6 +8,8 @@ __pycache__/
 
 *.db
 
+blabla.py
+
 # Distribution / packaging
 .Python
 build/
