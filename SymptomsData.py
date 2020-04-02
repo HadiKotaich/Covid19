@@ -77,7 +77,10 @@ class SymptomsData:
 
                                       'direct contact'
                                       ]
-        
+        synonyms['age'] = ['عمر',
+                        'age'
+                        ]
+
         for symptom in synonyms.keys():
             symptoms.append(symptom)
             

@@ -1,10 +1,12 @@
 from RecordsDb import RecordsDb
 from InfoExtractor import InfoExtractor
+from SymptomsData import SymptomsData
 import datetime
 
-infoExtractor = InfoExtractor()
+symptomsData = SymptomsData()
+infoExtractor = InfoExtractor(symptomsData.baseSymptom)
 records = RecordsDb("Covid19.db", "Records")
-# records.CreateTable(infoExtractor.symptoms)
+records.CreateTable(symptomsData.symptoms)
 
 while True:
   id = input("enter id: ")
@@ -14,6 +16,5 @@ while True:
   
   if records.Contains(id, date) == False:
     records.Insert(id, date)
-
-  for info in infos:
-    records.Update(id, date, info[0], info[1], message)
+  
+  records.AddMessageToRecord(id, date, message, infos)

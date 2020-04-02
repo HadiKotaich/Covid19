@@ -46,12 +46,27 @@ class RecordsDb:
     record = self.con.execute(query, (id, date)).fetchone()
     return record != None
 
-  # updates a field in the specific record 
-  def Update(self, id, date, field, value, message):
-    query = "UPDATE "+ self.tableName +" SET " + field + " = ?, " +"""
-            conversation = conversation || ' { ' ||  ?  || ' [ ' || ? || ' ] ' || ' } ' 
-            where id = ? and date = ?"""
-    self.con.execute(query, (value, message, field, id, date))
+  # updates a field in the specific record and adds the corresponding message
+  def AddMessageToRecord(self, id, date, message, infos):
+    query = "UPDATE "+ self.tableName +" SET "
+    
+    params = []
+    for info in infos:
+      query += info[0] + " = ?, "
+      params.append(info[1])
+
+    query += """conversation = conversation || ' { ' ||  ?  || ' [ ' """
+    params.append(message)
+
+    for info in infos:
+      query += """ || ? || ' , ' """
+      params.append(info[0])
+
+    query += """ || ' ] } ' where id = ? and date = ?"""    
+    params.append(id)
+    params.append(date)
+    print(params)
+    self.con.execute(query, params)
     self.con.commit()
 
   # gets a specific record

@@ -35,7 +35,8 @@ class RandomSentenceGenerator:
 englishWords = ["cough", "cold", "diarrhea","throat", "sore throat", "Muscle pain","Pain in the body",  "headache", "temperature", "breathing difficulties", "exhaustion", "I travelled ", "14 days", "corona", "Contact with patient" ]
 arabicWords = ["سعال", "برد", "إسهال", "حلق", "إلتهاب في الحلق", "ألم عضلي", "ألم في الجسم", "صداع", "حرارة", "صعوبة في التنفس", "إرهاق", "سافرت ", "١٤ يوم", "كورونا", "إتصال بالمصابين" ]
 sentenceGenerator = RandomSentenceGenerator(arabicWords, englishWords)
-sentences = sentenceGenerator.generateSentences(500, 0.7)
+sentences = sentenceGenerator.generateSentences(500, 0.9)
 f = open("randomSentences.txt", 'w', encoding="utf-8")
 for sentence in sentences:
-  f.write(sentence + "\n\n\n")
+  f.write(sentence + "\n\n")
+  f.write("-----------------------------------------------------------------------\n\n")
