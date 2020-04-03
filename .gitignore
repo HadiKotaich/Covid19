@@ -9,6 +9,7 @@ __pycache__/
 *.db
 
 blabla.py
+directories
 
 # Distribution / packaging
 .Python
