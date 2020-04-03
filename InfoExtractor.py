@@ -31,8 +31,6 @@ class InfoExtractor:
     #TODO single and multiple words
         self.baseSymptom = baseSymptom
 
-
-
     #Given the message as a string, return a list of the information
     #return: list of tuples (attribute, 1 or 0 or value for age)
     def ExtractInfo(self,message):
