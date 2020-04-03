@@ -3,8 +3,12 @@ from SymptomsData import SymptomsData
 import unicodedata
 
 #trial function
-def isAge(number):
-    return number < 36 or number > 41
+def isAge(number, previous):
+    ageKeywords = ['عمر','أنا','age','am','im']
+    for keyword in ageKeywords:
+        if keyword in previous: return True
+
+    return False
 
 
 #check if arabic char
@@ -17,10 +21,11 @@ def isArabChar(ch):
     '\U00010E60' <= ch <= '\U00010E7F' or
     '\U0001EE00' <= ch <= '\U0001EEFF')
 
-#clean the string from punctuation
+#clean the string from punctuation (even for Arabic) and capital letters
 #TODO: Should we check for floats? ex: 39.2?
 def clean(string):
     ret = ''.join(ch for ch in string if not unicodedata.category(ch).startswith('P'))
+    ret = ret.lower()
     return ret
 
 
@@ -38,7 +43,13 @@ class InfoExtractor:
     def ExtractInfo(self,message):
         baseSymptom = self.baseSymptom
         words = message.split()
-        ret = []
+
+        #intermediate dictionary to avoid duplicates in infoList
+        symptomValue = {}
+        infoList = []
+
+        #string to store the previous word
+        previousWord = "عمر"
         
         for w in words:
             #TODO need if arabic to process it
@@ -50,19 +61,31 @@ class InfoExtractor:
             #NOTE: isdecimal() and int() work for arabic digits
             if w.isdecimal():
                 #could be age
-                if (isAge( int(w) )):
-                    ret.append( ('age', int(w)) )
+                if (isAge( int(w), previousWord )):
+                    symptomValue['age'] = int(w)
                     
                 #could be temperature
                 else:
                     temp_test = 1 if float(w)>=37.8 else 0
-                    ret.append( ('temperature', temp_test) )
+                    symptomValue['temperature'] = temp_test
 
             else:
                 #TODO should implement negation also
                 #TODO word distance and if multiple keywords?
                 if w in baseSymptom:
-                    ret.append( (baseSymptom[w], 1) )
+                    symptomValue[ baseSymptom[w] ] = 1
+                else:
+                    #find a substring of the word in baseSymptom keys
+                    #TO DISCUSS: the baseSymptom keys should only contain relevant unique keywords for the symptom
+                    for synonym in baseSymptom.keys():
+                        if w in synonym:
+                            symptomValue[ baseSymptom[synonym] ] = 1
+                            break
 
-        return ret
+            previousWord = w
+
+        for symptom in symptomValue.keys():
+            infoList.append( (symptom, symptomValue[symptom]) )
+        
+        return infoList
 

@@ -33,7 +33,7 @@ class SymptomsData:
                                 'diarrhea'
                                 ]
 
-        synonyms['sore_throat'] = ['حلق','إلتهاب في الحلق'
+        synonyms['sore_throat'] = ['حلق','إلتهاب الحلق',
 
                                    'sore throat'
                                    ]
@@ -53,7 +53,7 @@ class SymptomsData:
                                    'feaver'
                                    ]
 
-        synonyms['breathing'] = ['تنفس', 'صعوبة في التنفس',
+        synonyms['breathing'] = ['تنفس', 'صعوبة التنفس',
 
                                  'trouble breathing'
                                  ]
@@ -63,7 +63,7 @@ class SymptomsData:
                                'exhausted','fatigue'
                                ]
 
-        synonyms['travel_14'] = ['١٤ يوم', 'سافرت'
+        synonyms['travel_14'] = ['١٤ يوم', 'سافرت',
 
                                  '14 days'
                                  ]
