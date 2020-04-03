@@ -1,0 +1,2 @@
+watch `ls *.tex` "sleep 2;pdflatex $1 &" 
+#watch `ls *.bib` "sleep 5;bibtex $1; pdflatex $1 &"
