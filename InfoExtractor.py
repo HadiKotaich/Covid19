@@ -72,15 +72,11 @@ class InfoExtractor:
                 #TODO word distance and if multiple keywords?
                 if w in baseSymptom:
                     symptomValue[ baseSymptom[w] ] = 1
-                else:
-                    #find a substring of the word in baseSymptom keys
-                    #TO DISCUSS: the baseSymptom keys should only contain relevant unique keywords for the symptom
-                    for synonym in baseSymptom.keys():
-                        if w in synonym:
-                            symptomValue[ baseSymptom[synonym] ] = 1
-                            break
 
             previousWord = w
+
+        for synonym in baseSymptom.keys():
+            if synonym in message: symptomValue[ baseSymptom[synonym] ] = 1
 
         for symptom in symptomValue.keys():
             infoList.append( (symptom, symptomValue[symptom]) )
