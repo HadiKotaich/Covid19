@@ -40,6 +40,10 @@ class InfoExtractor:
     #return: list of tuples (attribute, 1 or 0 or value for age)
     def ExtractInfo(self,message):
         baseSymptom = self.baseSymptom
+
+        #TODO need if arabic to process it
+        #remove punctuation and capital letters
+        message = clean(message)
         words = message.split()
 
         #intermediate dictionary to avoid duplicates in infoList
@@ -50,9 +54,6 @@ class InfoExtractor:
         previousWord = "عمر"
         
         for w in words:
-            #TODO need if arabic to process it
-            #remove punctuation
-            w = clean(w)
 
             #TODO need a way to figure out if a number is age or temperature
             #Idea: could store previous word
@@ -76,10 +77,12 @@ class InfoExtractor:
             previousWord = w
 
         for synonym in baseSymptom.keys():
-            if synonym in message: symptomValue[ baseSymptom[synonym] ] = 1
+            if synonym in message:
+                symptomValue[ baseSymptom[synonym] ] = 1
 
         for symptom in symptomValue.keys():
             infoList.append( (symptom, symptomValue[symptom]) )
         
         return infoList
+
 
