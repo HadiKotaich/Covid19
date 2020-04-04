@@ -1,19 +1,25 @@
 from RecordsDb import RecordsDb
 from InfoExtractor import InfoExtractor
-import datetime
+from SymptomsData import SymptomsData
+from Message import Message
+from MessageManager import MessageManager
 
-infoExtractor = InfoExtractor()
+symptomsData = SymptomsData()
+infoExtractor = InfoExtractor(symptomsData.baseSymptom)
+messageManager = MessageManager()
 records = RecordsDb("Covid19.db", "Records")
-# records.CreateTable(infoExtractor.symptoms)
+records.CreateTable(symptomsData.symptoms)
 
 while True:
-  id = input("enter id: ")
-  message = input("enter message: ")
-  date = datetime.date.today()
-  infos = infoExtractor.ExtractInfo(message)
-  
-  if records.Contains(id, date) == False:
-    records.Insert(id, date)
-
-  for info in infos:
-    records.Update(id, date, info[0], info[1], message)
+  print("waiting for a new message...")
+  # wait for a message
+  message = messageManager.GetMessage()
+  # analyse the message text
+  infos = infoExtractor.ExtractInfo(message.text)
+  # update the database
+  if records.Contains(message.senderId, message.date) == False:
+    records.Insert(message.senderId, message.date)
+  records.AddMessageToRecord(message, infos)
+  # mark the message as done in the MessageManager
+  messageManager.LabelMessageAsDone(message)
+  print("Processing ", message.messageId, " done!")
