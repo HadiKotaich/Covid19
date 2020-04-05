@@ -1,0 +1,2 @@
+mkdir -p ~/WASymTrMsgs/last
+rsync -avz araubadmin@ar-aub.com:/WASymTrMsgs/last/* ~/WASymTrMsgs/last

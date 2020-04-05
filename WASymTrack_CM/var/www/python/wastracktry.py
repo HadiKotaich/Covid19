@@ -3,6 +3,7 @@
 
 from cgi import parse_qs, escape
 import json
+import datetime
 
 PYTHONIOENCODING="UTF-8"
 
@@ -73,21 +74,32 @@ class WASTMsg:
      csvres += ','
 
      if self.latitude != None : 
-        csvres += '"' + self.latitude + '"' 
+        csvres += '"' + str(self.latitude) + '"' 
      csvres += ','
 
      if self.longitude != None : 
-        csvres += '"' + self.longitude + '"' 
+        csvres += '"' + str(self.longitude) + '"' 
      csvres += ','
      return csvres
 
    def writeToFile(self, path):
       if self.sender == None or self.time == None :
           return 
+      currentDT = datetime.datetime.now()
+      time1 = str(currentDT.year) + '.'+ str(currentDT.month) + '.' + str(currentDT.day) + '.'  + str(currentDT.hour)
+      if (currentDT.minute < 30) :
+        time2 = time1 + '.30'
+        time1 += '.00'
+      else :
+        time1 += '.30'
+        one_hour = datetime.timedelta(hours=1)
+        currentDT = currentDT +one_hour
+        time2 = str(currentDT.year) + '.'+ str(currentDT.month) + '.' + str(currentDT.day) + '.'  + str(currentDT.hour) + '.00'
+
       #make sure to use time1 and time2 here
       f=open(path+"WASymTrack_"+str(time1) + "_" + str(time2) + ".csv", "a+")
-#      f.write(self.csvAll())
-      f.write("A.A.A.")
+      f.write(self.csvAll())
+      f.write("\n")
       f.close()
 
 
@@ -112,8 +124,8 @@ def application(environ, start_response):
 if __name__ == '__main__':
    f=open("example.json")
    jsonObj=json.loads(f.read())
-   #rec = WASTMsg(jsonObj)
-   #rec.writeToFile(WASTMsgStorePath)
+   rec = WASTMsg(jsonObj)
+   rec.writeToFile(WASTMsgStorePath)
    #print (rec.xmlAll())
    x = getValue_hier_keys(jsonObj,['message','media','title'])
    print(str(x)) 
