@@ -18,62 +18,67 @@ class SymptomsData:
 
         #add here the synonyms in each list
         #separated in each list Arabic from English
-        synonyms['cough'] = ['سعال','أسعل',
+        synonyms['cough'] = ['سعل', 'ساعل', 'مسعول', 'سعال','أسعل','أح','مأحوح', 'مقحوح', 'مكحوح', 'كحكحة', 'كح',
 
                              'cough'
                              ]
 
-        synonyms['cold'] = ['برد','نزلات البرد',
+        synonyms['cold'] = ['برد','نزل', 'نازل', 'منزول', 'مصقع', 'صقعة', 'صبرة', 'زكم', 'زاكم', 'مزكوم', 'ثلج', 'رجف',
+                            'اِرتِجَاج', 'بارد',
 
-                            'cold',
+                            'cold','freeze',
                             ]
 
-        synonyms['diarrhea'] = ['إسهال',
+        synonyms['diarrhea'] = ['إسهال', 'ذرب', 'بطن', 'معدة', 'معده',
 
                                 'diarrhea'
                                 ]
 
-        synonyms['sore_throat'] = ['حلق','إلتهاب الحلق',
+        synonyms['sore_throat'] = ['حلق','إلتهاب الحلق', 'كرير', 'حشرج', 'حلقوم', 'حنجر', 'زور', 'زلعوم', 'نحنح',
+                                   'نخم', 'زلاعيم',
 
                                    'sore throat'
                                    ]
 
-        synonyms['body_pain'] = ['جسم','عضل','ألم',
+        synonyms['body_pain'] = ['جسم','عضل','ألم', 'وجع', 'موجوع', 'موجع' ,'عذب' ,'عذاب', 'جسد',
 
                                  'body','muscle'
                                  ]
 
-        synonyms['headache'] = ['صداع',
+        synonyms['headache'] = ['صداع', 'رأس', 'صدع', 'دائخ', 'مرنح',
 
-                                'headache'
+                                'headache', 'migraine'
                                 ]
 
-        synonyms['temperature'] = ['حرارة',
+        synonyms['temperature'] = ['حرارة', 'حام', 'محموم', 'حمة', 'حمى', 'نوشة', 'سخن', 'ساخن',
 
-                                   'feaver'
+                                   'fever', 'feaver'
                                    ]
 
-        synonyms['breathing'] = ['تنفس', 'صعوبة التنفس',
+        synonyms['breathing'] = ['تنفس', 'صعوبة في التنفس', 'مبهور', 'لهثان', 'لهث', 'لاهث', 'نهج', 'ناهج',
+                                 'منهوج', 'استرواح', 'ربو',
 
                                  'trouble breathing'
                                  ]
 
-        synonyms['fatigue'] = ['إرهاق',
+        synonyms['fatigue'] = ['إرهاق', 'معي', 'مكدود', 'مجهد', 'متخاذل', 'مفروغ', 'هفتان', 'متهالك', 'كل', 'مكل',
+                               'رازح', 'تعب', 'تعبان',
 
                                'exhausted','fatigue'
                                ]
 
-        synonyms['travel_14'] = ['١٤ يوم', 'سافرت',
+        synonyms['travel_14'] = ['١٤ يوم', 'سافرت', 'مسافر', 'سفر', 'راح', 'رحت',
 
                                  '14 days'
                                  ]
 
-        synonyms['travel_corona'] = ['مناطق مصابة',
+        synonyms['travel_corona'] = ['مناطق مصابة', 'منطقة مصابة', 'بلد', 'دولة',
 
                                      'affected region'
                                      ]
 
-        synonyms['direct_contact'] = ['مصاب','إتصال بالمصابين',
+        synonyms['direct_contact'] = ['مصاب','إتصال بالمصابين', 'إتصال مباشر', 'فيروس', 'كورونا',
+                                      'انصاب', 'منصاب', 'اعتناء', 'أعتني',
 
                                       'direct contact'
                                       ]

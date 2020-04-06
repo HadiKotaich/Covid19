@@ -2,7 +2,7 @@
 from SymptomsData import SymptomsData
 import unicodedata
 
-#trial function
+#check if digit is age from the previous word
 def isAge(number, previous):
     ageKeywords = ['عمر','أنا','age','am','im']
     for keyword in ageKeywords:
@@ -22,7 +22,6 @@ def isArabChar(ch):
     '\U0001EE00' <= ch <= '\U0001EEFF')
 
 #clean the string from punctuation (even for Arabic) and capital letters
-#TODO: Should we check for floats? ex: 39.2?
 def clean(string):
     ret = ''.join(ch for ch in string if not unicodedata.category(ch).startswith('P'))
     ret = ret.lower()
@@ -32,8 +31,6 @@ def clean(string):
 class InfoExtractor:
     def __init__(self, baseSymptom):
     #baseSymptom is a dictionary as synonym:Symptom from SymptomsData
-    #TODO need to decide on attribute names to use
-    #TODO single and multiple words
         self.baseSymptom = baseSymptom
 
     #Given the message as a string, return a list of the information
@@ -41,7 +38,6 @@ class InfoExtractor:
     def ExtractInfo(self,message):
         baseSymptom = self.baseSymptom
 
-        #TODO need if arabic to process it
         #remove punctuation and capital letters
         message = clean(message)
         words = message.split()
@@ -55,8 +51,6 @@ class InfoExtractor:
         
         for w in words:
 
-            #TODO need a way to figure out if a number is age or temperature
-            #Idea: could store previous word
             #NOTE: isdecimal() and int() work for arabic digits
             if w.isdecimal():
                 #could be age
@@ -69,8 +63,6 @@ class InfoExtractor:
                     symptomValue['temperature'] = temp_test
 
             else:
-                #TODO should implement negation also
-                #TODO word distance and if multiple keywords?
                 if w in baseSymptom:
                     symptomValue[ baseSymptom[w] ] = 1
 
