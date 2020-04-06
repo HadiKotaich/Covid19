@@ -4,7 +4,7 @@ from sqlite3 import Error
 from Message import Message
 import datetime
 
-class RecordsDb:
+class RecordsTable:
   def __init__(self, dbName, tableName):
     try:
       self.con = sqlite3.connect(dbName)
@@ -36,7 +36,6 @@ class RecordsDb:
     query = "INSERT INTO " + self.tableName + "(senderId, date) VALUES (?,?)"
     self.con.execute(query, (senderId, date))
     self.con.commit()
-
   # checks if a record exist
   def Contains(self, senderId, date):
     query = """ 
@@ -46,34 +45,42 @@ class RecordsDb:
             """
     record = self.con.execute(query, (senderId, date)).fetchone()
     return record != None
-
-  # updates a field in the specific record and adds the corresponding message
-  def AddMessageToRecord(self, message, infos):
-    query = "UPDATE "+ self.tableName +" SET "
-    
-    params = []
-    for info in infos:
-      query += info[0] + " = ?, "
-      params.append(info[1])
-
-    query += """conversation = conversation || ' { ' ||  ?  || ' [ ' """
-    params.append(message.text)
-
-    for info in infos:
-      query += """ || ? || ' , ' """
-      params.append(info[0])
-
-    query += """ || ' ] } ' where senderId = ? and date = ?"""    
-    params.append(message.senderId)
-    params.append(message.date)
-    # print(params)
-    self.con.execute(query, params)
-    self.con.commit()
-
   # gets a specific record
-  def Get(self, senderId, date):
+  def GetRecord(self, senderId, date):
     query = "SELECT * FROM " + self.tableName + " where senderId = ? and date = ?"
     record = self.con.execute(query, (senderId,date)).fetchone()
     return record
+  # gets a specific field
+  def GetField(self, senderId, date, field):
+    query = "SELECT  " + field + " FROM "+ self.tableName + " where senderId = ? and date = ?"
+    value = self.con.execute(query, (senderId, date)).fetchone()[0]
+    return value
+  # sets a specific field
+  def SetField(self, senderId, date, field, value):
+    query = "UPDATE "+ self.tableName + " SET " + field + " = ?  where senderId = ? and date = ?"
+    field = self.con.execute(query, (value,senderId,date)).fetchone()
+  # updates the infos of the record based on infos
+  def updateRecordInfos(self, senderId, date, infos):
+    query = "UPDATE "+ self.tableName +" SET "
+    params = []
+    
+    for i in range(len(infos)):
+      info = infos[i]
+      query += info[0] + " = ? "
+      params.append(info[1])
+      if i != len(infos) - 1:
+        query += " , "
 
-  
+    query += """ where senderId = ? and date = ?"""    
+    params.append(senderId)
+    params.append(date)
+    self.con.execute(query, params)
+    self.con.commit()
+  #add message to the conversation and returns the new conversation
+  def AddMessageToConversation(self, message):
+    senderId = message.senderId
+    date = message.date
+    conversation = self.GetField(senderId, date, "conversation")
+    conversation += " " + message.text
+    self.SetField(senderId, date, "conversation", conversation)
+    return conversation

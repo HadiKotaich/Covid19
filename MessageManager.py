@@ -1,4 +1,4 @@
-from Message import Message, EncodeMessage
+from Message import Message, EncodeMessage, DecodeMessage, EncodeMessageList, DecodeMessageList
 import datetime
 import json
 import jsonpickle
@@ -12,32 +12,31 @@ class MessageManager:
     self.newMessagesDirectory =  self.basePath / "newMessages"
     self.inProgressDirectory = self.basePath / "progress"
     self.doneMessagesDirectory = self.basePath / "doneMessages"
-    self.newMessages = set()
+    self.newFiles = set()
 
-  def GetMessage(self):
-    while len(self.newMessages) == 0:
+  def GetMessages(self):
+    while len(self.newFiles) == 0:
       files = [e for e in self.newMessagesDirectory.iterdir() if e.is_file()]
       for f in files:
-        self.newMessages.add(f.name)
+        self.newFiles.add(f.name)
     
-    currentFileName = self.newMessages.pop()  
-    oldPath = self.newMessagesDirectory / currentFileName
-    newPath = self.inProgressDirectory / currentFileName
+    fileName = self.newFiles.pop()  
+    oldPath = self.newMessagesDirectory / fileName
+    newPath = self.inProgressDirectory / fileName
     oldPath.replace(newPath)
-    
-    message = jsonpickle.decode(open(newPath).read())
-    return message
+    messages = DecodeMessage(open(newPath).read())
+    return (fileName, messages)
   
-  def LabelMessageAsDone(self, message):
-    oldPath = self.inProgressDirectory / message.messageId
-    newPath = self.doneMessagesDirectory / message.messageId
+  def LabelFileAsDone(self, fileName):
+    oldPath = self.inProgressDirectory / fileName
+    newPath = self.doneMessagesDirectory / fileName
     oldPath.replace(newPath)
 
   # for testing purpouses
-  def SaveInNewMessages(self, message):
-    encodedMessage = EncodeMessage(message)
-    p = self.newMessagesDirectory / message.messageId
-    p.write_text(encodedMessage, encoding="utf-8") 
+  def SaveInNewMessages(self, messages, fileName):
+    encodedMessages = EncodeMessageList(messages)
+    p = self.newMessagesDirectory / fileName
+    p.write_text(encodedMessages, encoding="utf-8") 
 
 
 # message = messageManager.GetMessage()
