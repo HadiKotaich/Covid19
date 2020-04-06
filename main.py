@@ -1,4 +1,5 @@
-from RecordsDb import RecordsDb
+from RecordsTable import RecordsTable
+from MessagesTable import MessagesTable
 from InfoExtractor import InfoExtractor
 from SymptomsData import SymptomsData
 from Message import Message
@@ -7,19 +8,31 @@ from MessageManager import MessageManager
 symptomsData = SymptomsData()
 infoExtractor = InfoExtractor(symptomsData.baseSymptom)
 messageManager = MessageManager()
-records = RecordsDb("Covid19.db", "Records")
-records.CreateTable(symptomsData.symptoms)
+
+recordsTable = RecordsTable("Covid19.db", "Records")
+recordsTable.CreateTable(symptomsData.symptoms)
+
+messagesTable = MessagesTable("Covid19.db", "Messages")
+messagesTable.CreateTable()
 
 while True:
   print("waiting for a new message...")
   # wait for a message
-  message = messageManager.GetMessage()
-  # analyse the message text
-  infos = infoExtractor.ExtractInfo(message.text)
-  # update the database
-  if records.Contains(message.senderId, message.date) == False:
-    records.Insert(message.senderId, message.date)
-  records.AddMessageToRecord(message, infos)
+  (filename, messages) = messageManager.GetMessages()
+  for message in messages:
+    # update the database
+    if recordsTable.Contains(message.senderId, message.date) == False:
+      recordsTable.Insert(message.senderId, message.date)
+    
+    # update the conversation
+    updatedConversation = recordsTable.AddMessageToConversation(message)  
+    # analyse the updated conversation
+    infos = infoExtractor.ExtractInfo(updatedConversation)
+    # update the symptoms
+    recordsTable.updateRecordInfos(message.senderId, message.date, infos)
+    # adding the message to the message table
+    messagesTable.Insert(message)
+
   # mark the message as done in the MessageManager
-  messageManager.LabelMessageAsDone(message)
-  print("Processing ", message.messageId, " done!")
+  messageManager.LabelFileAsDone(filename)
+  print("Processing ", filename, " done!")
