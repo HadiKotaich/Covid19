@@ -7,7 +7,7 @@ import datetime
 class MessagesTable:
   def __init__(self, dbName, tableName):
     try:
-      self.con = sqlite3.connect(dbName)
+      self.con = sqlite3.connect(dbName, timeout=10)
       self.tableName = tableName
     except Error:
       print(Error)
@@ -34,7 +34,22 @@ class MessagesTable:
   # inerts a record 
   def Insert(self, message):
     query = "INSERT INTO " + self.tableName + " VALUES (?,?, ?, ?, ?, ?, ?, ?, ?)"
-    self.con.execute(query, (message.messageId, message.text, message.senderId, message.date, message.isVoice, message.voiceUrl, message.isLocation, message.latitude, message.longitude))
+    print(message.isLocation)
+    print(message.latitude)
+    print(message.longitude)
+    print(message.latitude if message.isLocation else 0)
+    print(message.longitude if message.isLocation else 0)
+    self.con.execute(query, (
+      message.messageId, 
+      message.text, 
+      message.senderId, 
+      message.date, 
+      1 if message.isVoice else 0, 
+      message.voiceUrl if message.isVoice else '', 
+      1 if message.isLocation else 0, 
+      message.latitude if message.isLocation else 0, 
+      message.longitude if message.isLocation else 0
+      ))
     self.con.commit()
   # checks if a record exist
   def Get(self, messageId):

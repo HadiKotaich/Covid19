@@ -59,8 +59,11 @@ class RecordsTable:
   def SetField(self, senderId, date, field, value):
     query = "UPDATE "+ self.tableName + " SET " + field + " = ?  where senderId = ? and date = ?"
     field = self.con.execute(query, (value,senderId,date)).fetchone()
+    self.con.commit()
   # updates the infos of the record based on infos
   def updateRecordInfos(self, senderId, date, infos):
+    if len(infos) == 0:
+      return
     query = "UPDATE "+ self.tableName +" SET "
     params = []
     

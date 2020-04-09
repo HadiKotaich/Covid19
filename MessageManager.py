@@ -1,10 +1,10 @@
-from Message import Message, EncodeMessage, DecodeMessage, EncodeMessageList, DecodeMessageList
-import datetime
+from Message import Message
 import json
-import jsonpickle
 from pathlib import Path
 import shutil
-
+import csv
+import uuid 
+from datetime import datetime
 
 class MessageManager:
   def __init__(self):
@@ -24,7 +24,7 @@ class MessageManager:
     oldPath = self.newMessagesDirectory / fileName
     newPath = self.inProgressDirectory / fileName
     oldPath.replace(newPath)
-    messages = DecodeMessage(open(newPath).read())
+    messages = self.GetMessageListFromCSV(newPath.absolute())
     return (fileName, messages)
   
   def LabelFileAsDone(self, fileName):
@@ -32,20 +32,25 @@ class MessageManager:
     newPath = self.doneMessagesDirectory / fileName
     oldPath.replace(newPath)
 
-  # for testing purpouses
-  def SaveInNewMessages(self, messages, fileName):
-    encodedMessages = EncodeMessageList(messages)
-    p = self.newMessagesDirectory / fileName
-    p.write_text(encodedMessages, encoding="utf-8") 
-
-
-# message = messageManager.GetMessage()
-
-# print(message.text, message.senderId, message.date, message.messageId)
-
-# message = Message("Hello I have cough and feaver", "hadi", datetime.date.today(), "message_1.txt")
-# messageManager = MessageManager()
-# messageManager.SaveInNewMessages(message)
-
-# print(EncodeMessage(message))
+  def GetMessageListFromCSV(self, csvfilename) :
+    msglist = [] 
+    with open(csvfilename, encoding="utf-8") as csvFile : 
+      csvReader = csv.DictReader(csvFile, fieldnames=['Sender','Time','Text','IsVoice','IsLocation','VoiceUrl','VoiceExtension','Latitude','Longitude','VoiceLocation'])
+      for record in csvReader : 
+        msg = Message()
+        msg.messageId = str(uuid.uuid4())
+        msg.senderId = record['Sender']
+        msg.date = datetime.strptime(record['Time'].split('T')[0], '%Y-%m-%d').date()
+        msg.text = record['Text']
+        if record['IsVoice'] == 'T' : 
+          msg.isVoice = True 
+        if record['IsLocation'] == 'T' : 
+          msg.isLocation = True 
+        msg.voiceUrl = record['VoiceUrl']
+        msg.voiceExtension = record['VoiceExtension']
+        msg.latitude = record['Latitude']
+        msg.longitude = record['Longitude']
+        msg.audioFileName = record['VoiceLocation']
+        msglist.append(msg) 
+    return msglist
 

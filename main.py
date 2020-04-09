@@ -4,6 +4,7 @@ from InfoExtractor import InfoExtractor
 from SymptomsData import SymptomsData
 from Message import Message
 from MessageManager import MessageManager
+import datetime
 
 symptomsData = SymptomsData()
 infoExtractor = InfoExtractor(symptomsData.baseSymptom)

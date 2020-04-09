@@ -1,29 +1,27 @@
-import json
-import jsonpickle
-from json import JSONEncoder
-
 class Message:
-  def __init__(self, text, senderId, date, isVoice, voiceUrl, isLocation, latitude, longitude, messageId):
+  def __init__(self, text=None, senderId=None, date=None, messageId=0):
     self.text = text
     self.senderId = senderId
     self.date = date
-
-    self.isVoice = isVoice 
-    self.voiceUrl = voiceUrl
-    self.isLocation = isLocation 
-    self.latitude = latitude
-    self.longitude = longitude
-
     self.messageId = messageId
+    self.isVoice = False
+    self.isLocation = False
+    self.voiceUrl = None
+    self.voiceExtention = None
+    self.latitude = None
+    self.longitude = None
+    self.audioFileName = None
+    self.cough = 0
+    self.cold = 0
+    self.headache = 0
+    self.breathing = 0
+    self.throat = 0
+    self.muscle = 0
+    self.pain = 0
+    self.fever = 0
+    self.tired = 0
+    self.contact = 0
+    self.travel = 0
+    self.overlap = 0 
 
-def EncodeMessage(message):
-  return jsonpickle.encode(message)
 
-def DecodeMessage(encodedMessage):
-  return jsonpickle.decode(encodedMessage)
-
-def EncodeMessageList(messageList):
-  return jsonpickle.encode(messageList)
-
-def DecodeMessageList(encodedMessageList):
-  return jsonpickle.decode(encodedMessageList)
