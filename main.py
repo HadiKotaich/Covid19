@@ -25,8 +25,14 @@ while True:
     if recordsTable.Contains(message.senderId, message.date) == False:
       recordsTable.Insert(message.senderId, message.date)
     
+    # update the location
+    if message.isLocation:
+      recordsTable.SetField(message.senderId, message.date, "longitude", message.longitude)
+      recordsTable.SetField(message.senderId, message.date, "latitude", message.latitude)
+    
     # update the conversation
-    updatedConversation = recordsTable.AddMessageToConversation(message)  
+    updatedConversation = recordsTable.AddMessageToConversation(message)
+
     # analyse the updated conversation
     infos = infoExtractor.ExtractInfo(updatedConversation)
     # update the symptoms

@@ -22,8 +22,10 @@ class RecordsTable:
     query = "CREATE TABLE " + self.tableName + """(
               senderId text NOT NULL, 
               date date NOT NULL,
+              latitude float DEFAULT -1000,
+              longitude float DEFAULT -1000,
               conversation text DEFAULT ''
-            """
+            """ 
 
     for symptom in symptoms:
       query += ", " + symptom + " float DEFAULT 0"
@@ -79,6 +81,7 @@ class RecordsTable:
     params.append(date)
     self.con.execute(query, params)
     self.con.commit()
+  
   #add message to the conversation and returns the new conversation
   def AddMessageToConversation(self, message):
     senderId = message.senderId
@@ -87,3 +90,32 @@ class RecordsTable:
     conversation += " " + message.text
     self.SetField(senderId, date, "conversation", conversation)
     return conversation
+
+  # Analytics
+
+  # params:
+  #   constraints: list of (attribute, lower value, upper value)
+  # return:
+  #   returns the count of records satisfying all these constraints
+  def CountRecords(self, constraints):
+    params = []
+    query = "SELECT  COUNT(*) FROM "+ self.tableName
+    
+    for i in range(len(constraints)):
+      if i == 0:
+        query += " where "
+      else:
+        query += " and "
+      query += constraints[i][0] + " between ? and ? "
+      params.append(constraints[i][1])
+      params.append(constraints[i][2])
+      
+    
+    value = self.con.execute(query, params).fetchone()[0]
+    return value
+    
+
+
+  
+
+  
